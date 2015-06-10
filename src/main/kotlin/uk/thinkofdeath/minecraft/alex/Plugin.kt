@@ -38,7 +38,7 @@ class AlexPlugin : JavaPlugin {
 
     override fun onEnable() {
         registerTypes(registry)
-        registry.register(BasicCommands())
+        registry.register(BasicCommands(this))
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {

@@ -17,11 +17,13 @@
 package uk.thinkofdeath.minecraft.alex
 
 import org.bukkit.GameMode
+import org.bukkit.entity.Player
 import uk.thinkofdeath.minecraft.alex.command.ArgumentParser
 import uk.thinkofdeath.minecraft.alex.command.CommandRegistry
 
-fun registerTypes(registry: CommandRegistry) {
+fun AlexPlugin.registerTypes(registry: CommandRegistry) {
     registry.addParser(javaClass<GameMode>(), GameModeParser())
+    registry.addParser(javaClass<Player>(), PlayerParser(this))
 }
 
 class GameModeParser : ArgumentParser<GameMode> {
@@ -61,6 +63,22 @@ class GameModeParser : ArgumentParser<GameMode> {
             }
         }
         return vals
+    }
+}
+
+class PlayerParser(val plugin: AlexPlugin) : ArgumentParser<Player> {
+    override fun parse(argument: String): Player {
+        val player = plugin.getServer().getPlayer(argument)
+            ?: throw IllegalArgumentException("No player named %s is online".format(argument))
+        return player
+    }
+
+    override fun complete(argument: String): Set<String> {
+        val completions = hashSetOf<String>()
+        for (player in plugin.getServer().matchPlayer(argument)) {
+            completions.add(player.getName())
+        }
+        return completions
     }
 
 }

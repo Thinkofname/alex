@@ -17,14 +17,14 @@
 package uk.thinkofdeath.minecraft.alex
 
 import org.bukkit.GameMode
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import uk.thinkofdeath.minecraft.alex.command.CommandHandler
 import uk.thinkofdeath.minecraft.alex.HasPermission as hasPermission
 import uk.thinkofdeath.minecraft.alex.command.Command as cmd
 import uk.thinkofdeath.minecraft.alex.command.Commands as cmds
 
-class BasicCommands : CommandHandler {
-
+class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
 
     cmds(
         cmd("gm ?"),
@@ -34,5 +34,23 @@ class BasicCommands : CommandHandler {
     fun gamemode(sender: Player, gm: GameMode) {
         sender.setGameMode(gm)
         sender.sendMessage("Gamemode changed to %s".format(gm.name().toLowerCase()))
+    }
+
+    cmds(
+        cmd("gm ? ?"),
+        cmd("gm ?2 ?1"),
+        cmd("gamemode ? ?"),
+        cmd("gamemode ?2 ?1")
+    )
+    hasPermission("alex.command.gamemode.other")
+    fun gamemode(sender: CommandSender, gm: GameMode, target: Player) {
+        target.setGameMode(gm)
+        sender.sendMessage("Gamemode changed to %s for %s".format(
+            gm.name().toLowerCase(),
+            target.getDisplayName()
+        ))
+        target.sendMessage("Your gamemode was changed to %s".format(
+            gm.name().toLowerCase()
+        ))
     }
 }
