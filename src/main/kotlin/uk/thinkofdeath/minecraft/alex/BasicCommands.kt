@@ -19,16 +19,16 @@ package uk.thinkofdeath.minecraft.alex
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import uk.thinkofdeath.minecraft.alex.command.CommandHandler
+import uk.thinkofdeath.minecraft.alex.HasPermission as hasPermission
 import uk.thinkofdeath.minecraft.alex.command.Command as cmd
 import uk.thinkofdeath.minecraft.alex.command.Commands as cmds
-import uk.thinkofdeath.minecraft.alex.HasPermission as hasPermission
 
 class BasicCommands : CommandHandler {
 
 
     cmds(
-            cmd("gm ?"),
-            cmd("gamemode ?")
+        cmd("gm ?"),
+        cmd("gamemode ?")
     )
     hasPermission("alex.command.gamemode.self")
     fun gamemode(sender: Player, gm: GameMode) {

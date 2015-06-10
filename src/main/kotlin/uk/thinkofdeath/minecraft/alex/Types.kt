@@ -27,21 +27,21 @@ fun registerTypes(registry: CommandRegistry) {
 class GameModeParser : ArgumentParser<GameMode> {
 
     val matches = mapOf(
-            "s" to GameMode.SURVIVAL,
-            "0" to GameMode.SURVIVAL,
-            "survival" to GameMode.SURVIVAL,
+        "s" to GameMode.SURVIVAL,
+        "0" to GameMode.SURVIVAL,
+        "survival" to GameMode.SURVIVAL,
 
-            "c" to GameMode.CREATIVE,
-            "1" to GameMode.CREATIVE,
-            "creative" to GameMode.CREATIVE,
+        "c" to GameMode.CREATIVE,
+        "1" to GameMode.CREATIVE,
+        "creative" to GameMode.CREATIVE,
 
-            "a" to GameMode.ADVENTURE,
-            "2" to GameMode.ADVENTURE,
-            "adventure" to GameMode.ADVENTURE,
+        "a" to GameMode.ADVENTURE,
+        "2" to GameMode.ADVENTURE,
+        "adventure" to GameMode.ADVENTURE,
 
-            "sp" to GameMode.SPECTATOR,
-            "3" to GameMode.SPECTATOR,
-            "spectator" to GameMode.SPECTATOR
+        "sp" to GameMode.SPECTATOR,
+        "3" to GameMode.SPECTATOR,
+        "spectator" to GameMode.SPECTATOR
     )
 
     override fun parse(argument: String): GameMode {

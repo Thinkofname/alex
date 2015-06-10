@@ -86,8 +86,8 @@ class CommandRegistry {
                         var argType = methodArgs[index]
 
                         val varargs = method.isVarArgs()
-                                && methodArgs.size() == index + 1
-                                && i == args.size() - 1
+                            && methodArgs.size() == index + 1
+                            && i == args.size() - 1
                         if (varargs) {
                             argType = argType.getComponentType()
                         }
@@ -142,10 +142,10 @@ class CommandRegistry {
                 })
 
                 currentNode.methods[methodArgs[0]] = CMethod(
-                        method,
-                        handler,
-                        argumentValidators,
-                        argPositions
+                    method,
+                    handler,
+                    argumentValidators,
+                    argPositions
                 )
             }
         }
@@ -165,14 +165,14 @@ class CommandRegistry {
 
         outer@for (method in of.getDeclaredMethods()) {
             if (method.getAnnotation(javaClass<Command>()) == null
-                    && method.getAnnotation(javaClass<Commands>()) == null) {
+                && method.getAnnotation(javaClass<Commands>()) == null) {
                 continue
             }
             if (!Modifier.isPrivate(method.getModifiers())) {
                 // check if the method is already defined
                 for (other in target) {
                     if (other.getName() == method.getName()
-                            && Arrays.equals(other.getParameterTypes(), method.getParameterTypes())) {
+                        && Arrays.equals(other.getParameterTypes(), method.getParameterTypes())) {
                         continue@outer
                     }
                 }
@@ -185,13 +185,13 @@ class CommandRegistry {
         val validators = arrayListOf<ArgumentValidator<*>>()
         for (annotation in annotations) {
             val handler = annotation.annotationType().getAnnotation(javaClass<TypeHandler>())
-                    ?: continue
+                ?: continue
             if (!handler.clazz.isAssignableFrom(argType)) {
                 throw RuntimeException(argType.getSimpleName() + " requires " + handler.clazz.javaClass.getSimpleName())
             }
             val constructor = handler.value
-                    .asSubclass(javaClass<ArgumentValidator<*>>())
-                    .getDeclaredConstructor(annotation.annotationType())
+                .asSubclass(javaClass<ArgumentValidator<*>>())
+                .getDeclaredConstructor(annotation.annotationType())
             constructor.setAccessible(true)
             validators.add(constructor.newInstance(annotation))
 
@@ -271,7 +271,7 @@ class CommandRegistry {
                     val vtype = argumentNode.varargsType
                     if (vtype != null) {
                         out = JArray.newInstance(
-                                vtype, args.size() - offset
+                            vtype, args.size() - offset
                         )
                         for (i in offset..args.size() - 1) {
                             val parsed = argumentNode.parser.parse(args[i])
@@ -342,7 +342,7 @@ class CommandRegistry {
                     val vtype = argumentNode.varargsType
                     if (vtype != null) {
                         out = JArray.newInstance(
-                                vtype, args.size() - offset
+                            vtype, args.size() - offset
                         )
                         for (i in offset..args.size() - 1) {
                             val parsed = argumentNode.parser.parse(args[i])
@@ -391,10 +391,10 @@ class CommandRegistry {
 }
 
 data class CommandState(
-        val node: Node,
-        val argument: Any,
-        val offset: Int,
-        val parent: CommandState? = null
+    val node: Node,
+    val argument: Any,
+    val offset: Int,
+    val parent: CommandState? = null
 )
 
 class CommandException : Exception {

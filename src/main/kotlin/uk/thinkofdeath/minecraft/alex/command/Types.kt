@@ -31,21 +31,21 @@ annotation class Commands(vararg val value: Command)
 interface CommandHandler
 
 data class Node(
-        val subCommands: MutableMap<String, Node> = hashMapOf(),
-        val arguments: MutableList<ANode> = arrayListOf(),
-        val methods: MutableMap<Class<*>, CMethod> = hashMapOf()
+    val subCommands: MutableMap<String, Node> = hashMapOf(),
+    val arguments: MutableList<ANode> = arrayListOf(),
+    val methods: MutableMap<Class<*>, CMethod> = hashMapOf()
 )
 
 data class CMethod(
-        val method: Method,
-        val owner: CommandHandler,
-        val validators: Array<ArgumentValidator<*>>,
-        val positions: Array<Int>
+    val method: Method,
+    val owner: CommandHandler,
+    val validators: Array<ArgumentValidator<*>>,
+    val positions: Array<Int>
 )
 
 data class ANode(
-        val parser: ArgumentParser<*>,
-        val type: Array<ArgumentValidator<*>>,
-        val varargsType: Class<*>?,
-        val node: Node = Node()
+    val parser: ArgumentParser<*>,
+    val type: Array<ArgumentValidator<*>>,
+    val varargsType: Class<*>?,
+    val node: Node = Node()
 )
