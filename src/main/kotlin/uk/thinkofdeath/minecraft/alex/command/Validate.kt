@@ -20,7 +20,6 @@ import java.lang.annotation.ElementType
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
 import java.lang.annotation.Target
-import kotlin.reflect.KClass
 
 interface ArgumentValidator<T> {
     fun validate(argString: String, arg: T)
@@ -28,12 +27,12 @@ interface ArgumentValidator<T> {
 
 Target(ElementType.ANNOTATION_TYPE)
 Retention(RetentionPolicy.RUNTIME)
-annotation class TypeHandler(val value: KClass<out ArgumentValidator<*>>, val clazz: KClass<*>)
+annotation class TypeHandler(val value: Class<out ArgumentValidator<*>>, val clazz: Class<*>)
 
 
 Target(ElementType.PARAMETER, ElementType.METHOD)
 Retention(RetentionPolicy.RUNTIME)
-TypeHandler(value = MaxLengthHandler::class, clazz = String::class)
+TypeHandler(value = javaClass<MaxLengthHandler>(), clazz = javaClass<String>())
 annotation class MaxLength(val value: Int)
 
 class MaxLengthHandler : ArgumentValidator<String> {

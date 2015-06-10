@@ -19,10 +19,9 @@ package uk.thinkofdeath.minecraft.alex
 import org.bukkit.GameMode
 import uk.thinkofdeath.minecraft.alex.command.ArgumentParser
 import uk.thinkofdeath.minecraft.alex.command.CommandRegistry
-import kotlin.reflect.jvm.java
 
 fun registerTypes(registry: CommandRegistry) {
-    registry.addParser(GameMode::class.java, GameModeParser())
+    registry.addParser(javaClass<GameMode>(), GameModeParser())
 }
 
 class GameModeParser : ArgumentParser<GameMode> {

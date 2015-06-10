@@ -20,7 +20,6 @@ import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.util.Arrays
 import java.util.Stack
-import kotlin.reflect.jvm.java
 import java.lang.reflect.Array as JArray
 
 private val NO_ARG = Any()
@@ -187,11 +186,10 @@ class CommandRegistry {
         for (annotation in annotations) {
             val handler = annotation.annotationType().getAnnotation(javaClass<TypeHandler>())
                     ?: continue
-            val cls: Class<*> = handler.clazz.java
-            if (!cls.isAssignableFrom(argType)) {
+            if (!handler.clazz.isAssignableFrom(argType)) {
                 throw RuntimeException(argType.getSimpleName() + " requires " + handler.clazz.javaClass.getSimpleName())
             }
-            val constructor = (handler.value.java as Class<*>)
+            val constructor = handler.value
                     .asSubclass(javaClass<ArgumentValidator<*>>())
                     .getDeclaredConstructor(annotation.annotationType())
             constructor.setAccessible(true)
