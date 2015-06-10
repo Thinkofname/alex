@@ -35,9 +35,9 @@ class HasPermissionHandler : ArgumentValidator<CommandSender> {
     val permissions : Array<out String>
     val wildcard : Boolean
 
-    constructor(hasPermssion: HasPermission) {
-        permissions = hasPermssion.value
-        wildcard = hasPermssion.wildcard
+    constructor(hasPermission: HasPermission) {
+        permissions = hasPermission.value
+        wildcard = hasPermission.wildcard
     }
 
     override fun validate(argString: String, arg: CommandSender) {
