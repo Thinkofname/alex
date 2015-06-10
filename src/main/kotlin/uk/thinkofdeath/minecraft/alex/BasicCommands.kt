@@ -21,6 +21,7 @@ import org.bukkit.entity.Player
 import uk.thinkofdeath.minecraft.alex.command.CommandHandler
 import uk.thinkofdeath.minecraft.alex.command.Command as cmd
 import uk.thinkofdeath.minecraft.alex.command.Commands as cmds
+import uk.thinkofdeath.minecraft.alex.HasPermission as hasPermission
 
 class BasicCommands : CommandHandler {
 
@@ -29,6 +30,7 @@ class BasicCommands : CommandHandler {
             cmd("gm ?"),
             cmd("gamemode ?")
     )
+    hasPermission("alex.command.gamemode.self")
     fun gamemode(sender: Player, gm: GameMode) {
         sender.setGameMode(gm)
         sender.sendMessage("Gamemode changed to %s".format(gm.name().toLowerCase()))

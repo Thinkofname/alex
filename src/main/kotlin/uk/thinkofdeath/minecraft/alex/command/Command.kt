@@ -229,7 +229,7 @@ class CommandRegistry {
                     if (type.isAssignableFrom(caller.javaClass)) {
                         try {
                             for (t in method.validators) {
-                                (t as ArgumentValidator<Any>).validate("", t)
+                                (t as ArgumentValidator<Any>).validate("", caller)
                             }
                         } catch (e: Exception) {
                             lastError = e
