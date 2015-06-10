@@ -36,16 +36,25 @@ fun strColor(str: String, light: ChatColor, dark: ChatColor): String {
     var isFormatting = false
     for (c in str) {
         when (c) {
-            '`' -> if (isFormatting) isFormatting = false else {
-                isFormatting = true;
+            '`' -> if (isFormatting) {
+                isFormatting = false
+                builder.append(light)
+            } else {
+                isFormatting = true
                 builder.append(dark)
             }
-            '#' -> if (isFormatting) isFormatting = false else {
-                isFormatting = true;
+            '#' -> if (isFormatting) {
+                isFormatting = false
+                builder.append(light)
+            } else {
+                isFormatting = true
                 builder.append(ChatColor.BOLD)
             }
-            '/' -> if (isFormatting) isFormatting = false else {
-                isFormatting = true;
+            '/' -> if (isFormatting) {
+                isFormatting = false
+                builder.append(light)
+            } else {
+                isFormatting = true
                 builder.append(ChatColor.ITALIC)
             }
             else -> builder.append(c)
