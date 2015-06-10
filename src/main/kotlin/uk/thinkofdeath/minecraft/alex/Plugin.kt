@@ -58,13 +58,11 @@ class AlexPlugin : JavaPlugin {
     }
 
     override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<String>): List<String>? {
-        /*val cmd = StringBuilder(command.getName())
+        val cmd = StringBuilder(command.getName())
         for (a in args) {
             cmd.append(' ').append(a)
         }
-        registry.complete(sender, cmd.toString())
-        return null*/
-        return listOf()
+        return registry.complete(cmd.toString())
     }
 
 }

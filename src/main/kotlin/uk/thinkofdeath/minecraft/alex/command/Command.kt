@@ -308,6 +308,73 @@ class CommandRegistry {
         throw CommandException("Unknown command")
     }
 
+    fun complete(command: String): List<String> {
+        val completions = hashSetOf<String>()
+        val args = split(command)
+        // Stores the states we can return if the current route fails
+        val toTry = Stack<CommandState>()
+        toTry.add(CommandState(root, NO_ARG, 0))
+        // Try every possible route until we match a command or
+        // run out of options
+        while (!toTry.isEmpty()) {
+            val state = toTry.pop()
+            val currentNode = state.node
+            var offset = state.offset
+
+            val arg = args[offset]
+            val argLower = arg.toLowerCase()
+
+            if (offset == args.size() - 1) {
+                for (sub in currentNode.subCommands.keySet()) {
+                    if (sub.startsWith(argLower)) {
+                        completions.add(sub)
+                    }
+                }
+                for (node in currentNode.arguments) {
+                    completions.addAll(node.parser.complete(arg))
+                }
+                continue
+            }
+
+            for (argumentNode in currentNode.arguments) {
+                var out: Any?
+                try {
+                    val vtype = argumentNode.varargsType
+                    if (vtype != null) {
+                        out = JArray.newInstance(
+                                vtype, args.size() - offset
+                        )
+                        for (i in offset..args.size() - 1) {
+                            val parsed = argumentNode.parser.parse(args[i])
+                            for (type in argumentNode.type) {
+                                (type as ArgumentValidator<Any>).validate(args[i], parsed!!)
+                            }
+                            JArray.set(out, i - offset, parsed)
+                        }
+                        offset = args.size() - 1
+                    } else {
+                        out = argumentNode.parser.parse(arg)
+                        for (type in argumentNode.type) {
+                            (type as ArgumentValidator<Any>).validate(arg, out!!)
+                        }
+                    }
+                } catch (e: Exception) {
+                    continue
+                }
+
+                val newState = CommandState(argumentNode.node, out!!, offset + 1, state)
+                toTry.add(newState)
+            }
+            // Check sub-commands
+            if (argLower in currentNode.subCommands) {
+                val next = currentNode.subCommands[argLower]!!
+                val newState = CommandState(next, NO_ARG, offset + 1, state)
+                toTry.add(newState)
+            }
+        }
+        return completions.toList()
+    }
+
     private fun split(command: String): List<String> {
         val m = splitter.matcher(command)
         val args = arrayListOf<String>()
