@@ -33,7 +33,10 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
     hasPermission("alex.command.gamemode.self")
     fun gamemode(sender: Player, gm: GameMode) {
         sender.setGameMode(gm)
-        sender.sendMessage("Gamemode changed to %s".format(gm.name().toLowerCase()))
+        sender.sendMessage(
+            "Gamemode changed to `%s`".format(gm.name().toLowerCase())
+                .colorize()
+        )
     }
 
     cmds(
@@ -45,12 +48,12 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
     hasPermission("alex.command.gamemode.other")
     fun gamemode(sender: CommandSender, gm: GameMode, target: Player) {
         target.setGameMode(gm)
-        sender.sendMessage("Gamemode changed to %s for %s".format(
+        sender.sendMessage("Gamemode changed to `%s` for `%s`".format(
             gm.name().toLowerCase(),
             target.getDisplayName()
-        ))
-        target.sendMessage("Your gamemode was changed to %s".format(
+        ).colorize())
+        target.sendMessage("Your gamemode was changed to `%s`".format(
             gm.name().toLowerCase()
-        ))
+        ).colorize())
     }
 }

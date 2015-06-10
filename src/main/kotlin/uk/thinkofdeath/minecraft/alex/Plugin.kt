@@ -49,9 +49,9 @@ class AlexPlugin : JavaPlugin {
         try {
             registry.execute(sender, cmd.toString())
         } catch (e: CommandException) {
-            sender.sendMessage(ChatColor.RED.toString() + "Error: " + e.getMessage())
+            sender.sendMessage(("Error: `" + e.getMessage() + "`").error())
             if (e.getCause() != null) {
-                sender.sendMessage(ChatColor.RED.toString() + e.getCause()?.getMessage())
+                sender.sendMessage(e.getCause()?.getMessage()?.error())
             }
         }
         return true
