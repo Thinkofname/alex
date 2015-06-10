@@ -16,17 +16,55 @@
 
 package uk.thinkofdeath.minecraft.alex
 
+import org.bukkit.ChatColor
+import org.bukkit.command.Command
+import org.bukkit.command.CommandSender
 import org.bukkit.plugin.PluginDescriptionFile
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.plugin.java.JavaPluginLoader
+import uk.thinkofdeath.minecraft.alex.command.CommandException
+import uk.thinkofdeath.minecraft.alex.command.CommandRegistry
 import java.io.File
 
 class AlexPlugin : JavaPlugin {
+
+    val registry = CommandRegistry()
 
     constructor() : super()
 
     // For debugging
     constructor(loader: JavaPluginLoader, description: PluginDescriptionFile, dataFolder: File, file: File)
     : super(loader, description, dataFolder, file)
+
+    override fun onEnable() {
+        registerTypes(registry)
+        registry.register(BasicCommands())
+    }
+
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
+        val cmd = StringBuilder(command.getName())
+        for (a in args) {
+            cmd.append(' ').append(a)
+        }
+        try {
+            registry.execute(sender, cmd.toString())
+        } catch (e: CommandException) {
+            sender.sendMessage(ChatColor.RED.toString() + "Error: " + e.getMessage())
+            if (e.getCause() != null) {
+                sender.sendMessage(ChatColor.RED.toString() + e.getCause()?.getMessage())
+            }
+        }
+        return true
+    }
+
+    override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<String>): List<String>? {
+        /*val cmd = StringBuilder(command.getName())
+        for (a in args) {
+            cmd.append(' ').append(a)
+        }
+        registry.complete(sender, cmd.toString())
+        return null*/
+        return listOf()
+    }
 
 }

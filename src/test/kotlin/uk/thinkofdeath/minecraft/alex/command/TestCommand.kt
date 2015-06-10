@@ -239,10 +239,10 @@ class CommandTest {
         val reg = CommandRegistry()
         var callCount = 0
         reg.register(object : CommandHandler {
-            Commands(arrayOf(
+            Commands(
                     command("a"),
                     command("b")
-            ))
+            )
             fun test(sender: String) {
                 callCount++
             }
@@ -256,10 +256,10 @@ class CommandTest {
         val reg = CommandRegistry()
         var callCount = 0
         reg.register(object : CommandHandler {
-            Commands(arrayOf(
+            Commands(
                     command("a ?"),
                     command("b ?")
-            ))
+            )
             fun test(sender: String, arg: Int) {
                 callCount++
                 assertEquals(callCount, arg)

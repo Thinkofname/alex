@@ -26,7 +26,7 @@ annotation class Command(val value: String)
 
 Target(ElementType.METHOD)
 Retention(RetentionPolicy.RUNTIME)
-annotation class Commands(val value: Array<Command>)
+annotation class Commands(vararg val value: Command)
 
 interface CommandHandler
 
