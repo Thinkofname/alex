@@ -1,0 +1,5 @@
+name: Alex
+version: ${project.version}
+description: o.o
+
+main: uk.thinkofdeath.minecraft.alex.AlexPlugin
