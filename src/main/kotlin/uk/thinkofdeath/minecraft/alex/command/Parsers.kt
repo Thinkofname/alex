@@ -14,19 +14,33 @@
  * limitations under the License.
  */
 
-package uk.thinkofdeath.minecraft.alex
+package uk.thinkofdeath.minecraft.alex.command
 
-import org.bukkit.plugin.PluginDescriptionFile
-import org.bukkit.plugin.java.JavaPlugin
-import org.bukkit.plugin.java.JavaPluginLoader
-import java.io.File
+interface ArgumentParser<T> {
 
-class AlexPlugin : JavaPlugin {
+    fun parse(argument: String): T
 
-    constructor() : super()
+    fun complete(argument: String): Set<String>
+}
 
-    // For debugging
-    constructor(loader: JavaPluginLoader, description: PluginDescriptionFile, dataFolder: File, file: File)
-    : super(loader, description, dataFolder, file)
+class StringParser : ArgumentParser<String> {
+    override fun parse(argument: String): String {
+        return argument
+    }
+
+    override fun complete(argument: String): Set<String> {
+        return hashSetOf()
+    }
+
+}
+
+class IntParser : ArgumentParser<Int> {
+    override fun parse(argument: String): Int {
+        return argument.toInt()
+    }
+
+    override fun complete(argument: String): Set<String> {
+        return hashSetOf()
+    }
 
 }
