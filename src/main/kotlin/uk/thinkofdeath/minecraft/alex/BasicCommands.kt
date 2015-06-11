@@ -20,7 +20,9 @@ import org.bukkit.GameMode
 import org.bukkit.World
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.material.MaterialData
 import uk.thinkofdeath.minecraft.alex.command.CommandHandler
+import uk.thinkofdeath.minecraft.alex.db.blocks
 import uk.thinkofdeath.minecraft.alex.HasPermission as hasPermission
 import uk.thinkofdeath.minecraft.alex.command.Command as cmd
 import uk.thinkofdeath.minecraft.alex.command.Commands as cmds
@@ -98,6 +100,27 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
     hasPermission("alex.command.time.set")
     fun time(sender: Player, time: MCTime) {
         time(sender, sender.getWorld(), time)
+    }
+
+    cmds(
+        cmd("i ?"),
+        cmd("give ?")
+    )
+    fun give(sender: Player, mat: MaterialData) {
+        give(sender, mat, 64)
+    }
+
+    cmds(
+        cmd("i ? ?"),
+        cmd("give ? ?")
+    )
+    fun give(sender: Player, mat : MaterialData, count: Int) {
+        sender.getInventory().addItem(
+            mat.toItemStack(count)
+        )
+        sender.sendMessage("Placed `%d` of `%s` in your inventory".format(
+            count, blocks[mat]
+        ).colorize())
     }
 
 }

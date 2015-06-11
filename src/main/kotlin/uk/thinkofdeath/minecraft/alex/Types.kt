@@ -19,14 +19,17 @@ package uk.thinkofdeath.minecraft.alex
 import org.bukkit.GameMode
 import org.bukkit.World
 import org.bukkit.entity.Player
+import org.bukkit.material.MaterialData
 import uk.thinkofdeath.minecraft.alex.command.ArgumentParser
 import uk.thinkofdeath.minecraft.alex.command.CommandRegistry
+import uk.thinkofdeath.minecraft.alex.db.blocks
 
 fun AlexPlugin.registerTypes(registry: CommandRegistry) {
     registry.addParser(javaClass<GameMode>(), GameModeParser())
     registry.addParser(javaClass<Player>(), PlayerParser(this))
     registry.addParser(javaClass<World>(), WorldParser(this))
     registry.addParser(javaClass<MCTime>(), TimeParser())
+    registry.addParser(javaClass<MaterialData>(), MaterialDataParser())
 }
 
 class GameModeParser : ArgumentParser<GameMode> {
@@ -111,5 +114,24 @@ class TimeParser : ArgumentParser<MCTime> {
     }
 
     override fun complete(argument: String): Set<String> = hashSetOf()
+
+}
+
+class MaterialDataParser : ArgumentParser<MaterialData> {
+    override fun parse(argument: String): MaterialData {
+        val low = argument.toLowerCase()
+        return blocks[low] ?: throw IllegalArgumentException("Unknown block or item %s".format(argument))
+    }
+
+    override fun complete(argument: String): Set<String> {
+        val low = argument.toLowerCase()
+        val completions = hashSetOf<String>()
+        for (v in blocks.strToVal.keySet()) {
+            if (v.startsWith(low)) {
+                completions.add(v)
+            }
+        }
+        return completions
+    }
 
 }
