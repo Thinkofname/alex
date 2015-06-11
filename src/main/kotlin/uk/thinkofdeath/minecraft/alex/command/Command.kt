@@ -59,7 +59,7 @@ class CommandRegistry {
             for (command in commands) {
                 val args = command.value.splitBy(" ")
                 var argIndex = 1 // Skip the caller argument
-                val argPositions = Array(methodArgs.size(), { 0 })
+                val argPositions = IntArray(methodArgs.size())
 
                 // This starts at the at the root node and
                 // searches/creates branches until it reaches

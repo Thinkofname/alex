@@ -40,7 +40,7 @@ data class CMethod(
     val method: Method,
     val owner: CommandHandler,
     val validators: Array<ArgumentValidator<*>>,
-    val positions: Array<Int>
+    val positions: IntArray
 )
 
 data class ANode(
