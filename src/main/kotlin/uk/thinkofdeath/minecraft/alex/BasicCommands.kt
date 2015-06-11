@@ -17,6 +17,7 @@
 package uk.thinkofdeath.minecraft.alex
 
 import org.bukkit.GameMode
+import org.bukkit.World
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import uk.thinkofdeath.minecraft.alex.command.CommandHandler
@@ -56,4 +57,53 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
             gm.name().toLowerCase()
         ).colorize())
     }
+
+    cmd("worlds")
+    hasPermission("alex.command.world.list")
+    fun worlds(sender: CommandSender) {
+        val worlds = sender.getServer().getWorlds()
+        sender.sendMessage("Worlds(%d):".format(worlds.size()).colorize())
+        for (world in worlds) {
+            sender.sendMessage("- `%s`".format(world.getName()).colorize())
+        }
+    }
+
+    cmd("time ?")
+    hasPermission("alex.command.time")
+    fun time(sender: CommandSender, world: World) {
+        val time = world.getTime()
+        sender.sendMessage("The current time in `%s` is `%s`".format(
+            world.getName(),
+            formatMinecraftTime(time.toInt())
+        ).colorize())
+    }
+
+    cmd("time")
+    hasPermission("alex.command.time")
+    fun time(sender: Player) {
+        time(sender, sender.getWorld())
+    }
+
+    cmd("time ? ?")
+    hasPermission("alex.command.time.set")
+    fun time(sender: CommandSender, world: World, time: Int) {
+        world.setTime(time.toLong())
+        sender.sendMessage("Time set to `%s` in `%s`".format(
+            formatMinecraftTime(time),
+            world.getName()
+        ).colorize())
+    }
+
+    cmd("time ?")
+    hasPermission("alex.command.time.set")
+    fun time(sender: Player, time: Int) {
+        time(sender, sender.getWorld(), time)
+    }
+
+}
+
+fun formatMinecraftTime(time: Int) : String{
+    val hours = (6 + (time / 1000)) % 24
+    val mins = (((time % 1000).toDouble() / 1000) * 60).toInt()
+    return "%d:%02d".format(hours, mins)
 }

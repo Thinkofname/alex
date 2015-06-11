@@ -62,3 +62,4 @@ fun strColor(str: String, light: ChatColor, dark: ChatColor): String {
     }
     return builder.toString()
 }
+

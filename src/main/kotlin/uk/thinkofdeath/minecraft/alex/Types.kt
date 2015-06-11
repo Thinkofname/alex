@@ -17,6 +17,7 @@
 package uk.thinkofdeath.minecraft.alex
 
 import org.bukkit.GameMode
+import org.bukkit.World
 import org.bukkit.entity.Player
 import uk.thinkofdeath.minecraft.alex.command.ArgumentParser
 import uk.thinkofdeath.minecraft.alex.command.CommandRegistry
@@ -24,6 +25,7 @@ import uk.thinkofdeath.minecraft.alex.command.CommandRegistry
 fun AlexPlugin.registerTypes(registry: CommandRegistry) {
     registry.addParser(javaClass<GameMode>(), GameModeParser())
     registry.addParser(javaClass<Player>(), PlayerParser(this))
+    registry.addParser(javaClass<World>(), WorldParser(this))
 }
 
 class GameModeParser : ArgumentParser<GameMode> {
@@ -77,6 +79,25 @@ class PlayerParser(val plugin: AlexPlugin) : ArgumentParser<Player> {
         val completions = hashSetOf<String>()
         for (player in plugin.getServer().matchPlayer(argument)) {
             completions.add(player.getName())
+        }
+        return completions
+    }
+
+}
+
+class WorldParser(val plugin: AlexPlugin) : ArgumentParser<World> {
+    override fun parse(argument: String): World {
+        return plugin.getServer().getWorld(argument)
+            ?: throw IllegalArgumentException("No world named %s".format(argument))
+    }
+
+    override fun complete(argument: String): Set<String> {
+        val completions = hashSetOf<String>()
+        val low = argument.toLowerCase()
+        for (world in plugin.getServer().getWorlds()) {
+            if (world.getName().toLowerCase().startsWith(low)) {
+                completions.add(world.getName())
+            }
         }
         return completions
     }
