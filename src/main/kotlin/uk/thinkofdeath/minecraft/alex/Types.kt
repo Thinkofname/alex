@@ -22,48 +22,29 @@ import org.bukkit.entity.Player
 import org.bukkit.material.MaterialData
 import uk.thinkofdeath.minecraft.alex.command.ArgumentParser
 import uk.thinkofdeath.minecraft.alex.command.CommandRegistry
+import uk.thinkofdeath.minecraft.alex.db.DB
 import uk.thinkofdeath.minecraft.alex.db.blocks
+import uk.thinkofdeath.minecraft.alex.db.gamemode
 
 fun AlexPlugin.registerTypes(registry: CommandRegistry) {
-    registry.addParser(javaClass<GameMode>(), GameModeParser())
+    registry.addParser(javaClass<GameMode>(), RegistryParser(gamemode))
     registry.addParser(javaClass<Player>(), PlayerParser(this))
     registry.addParser(javaClass<World>(), WorldParser(this))
     registry.addParser(javaClass<MCTime>(), TimeParser())
     registry.addParser(javaClass<MaterialData>(), MaterialDataParser())
 }
 
-class GameModeParser : ArgumentParser<GameMode> {
+class RegistryParser<T>(val reg: DB<T>) : ArgumentParser<T> {
 
-    val matches = mapOf(
-        "s" to GameMode.SURVIVAL,
-        "0" to GameMode.SURVIVAL,
-        "survival" to GameMode.SURVIVAL,
-
-        "c" to GameMode.CREATIVE,
-        "1" to GameMode.CREATIVE,
-        "creative" to GameMode.CREATIVE,
-
-        "a" to GameMode.ADVENTURE,
-        "2" to GameMode.ADVENTURE,
-        "adventure" to GameMode.ADVENTURE,
-
-        "sp" to GameMode.SPECTATOR,
-        "3" to GameMode.SPECTATOR,
-        "spectator" to GameMode.SPECTATOR
-    )
-
-    override fun parse(argument: String): GameMode {
-        val lower = argument.toLowerCase()
-        if (lower in matches) {
-            return matches[lower]!!
-        }
-        throw IllegalArgumentException("Unknown gamemode " + argument)
+    override fun parse(argument: String): T {
+        return reg[argument]
+            ?: throw IllegalArgumentException("Unknown argument " + argument)
     }
 
     override fun complete(argument: String): Set<String> {
         val lower = argument.toLowerCase()
         val vals = hashSetOf<String>()
-        for (v in matches.keySet()) {
+        for (v in reg.strToVal.keySet()) {
             if (v.startsWith(lower)) {
                 vals.add(v)
             }
