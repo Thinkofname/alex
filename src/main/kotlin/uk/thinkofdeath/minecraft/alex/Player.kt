@@ -24,14 +24,14 @@ import java.io.File
 import kotlin.properties.Delegates
 
 
-class APlayer(private val player: Player, val plugin: AlexPlugin) {
+class APlayer(val bukkit: Player, val plugin: AlexPlugin) {
 
     companion object {
         val mapper = ObjectMapper(YAMLFactory())
             .registerModule(KotlinModule())
     }
 
-    private val dataFile = File(plugin.getDataFolder(), "players/%s.yml".format(player.getUniqueId()))
+    private val dataFile = File(plugin.getDataFolder(), "players/%s.yml".format(bukkit.getUniqueId()))
     private val data: PlayerData
 
     init {
@@ -44,21 +44,19 @@ class APlayer(private val player: Player, val plugin: AlexPlugin) {
             PlayerData()
         }
 
-        data.lastName = player.getName()
+        data.lastName = bukkit.getName()
         if (data.displayName != null) {
-            player.setDisplayName(data.displayName)
+            bukkit.setDisplayName(data.displayName)
         }
     }
 
-    public fun toBukkit(): Player = player
-
     fun setDisplayName(name: String) {
         data.displayName = name
-        player.setDisplayName(name)
+        bukkit.setDisplayName(name)
     }
 
     fun clearDisplayName() {
-        player.setDisplayName(player.getName())
+        bukkit.setDisplayName(bukkit.getName())
         data.displayName = null
     }
 
@@ -72,7 +70,5 @@ class APlayer(private val player: Player, val plugin: AlexPlugin) {
     }
 }
 
-
-fun Player.toAlex(): APlayer {
-    return instance.playersUUID[getUniqueId()]
-}
+val Player.alex : APlayer
+    get() = instance.playersUUID[getUniqueId()]

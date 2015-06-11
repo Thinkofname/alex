@@ -137,7 +137,7 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
     cmd("nick ?")
     hasPermission("alex.command.nick.set")
     fun nick(sender: Player, nick: String) {
-        val pl = sender.toAlex()
+        val pl = sender.alex
         val n = ChatColor.translateAlternateColorCodes('&', nick) + ChatColor.RESET
         pl.setDisplayName(n)
         sender.sendMessage("Your nickname has been changed to `%s`".format(
@@ -148,7 +148,7 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
     cmd("nick clear")
     hasPermission("alex.command.nick.clear")
     fun nickClear(sender: Player) {
-        val pl = sender.toAlex()
+        val pl = sender.alex
         pl.clearDisplayName()
         sender.sendMessage("Your nickname has been cleared".colorize())
     }
