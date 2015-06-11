@@ -31,6 +31,16 @@
             <version>1.8.7-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-kotlin</artifactId>
+            <version>2.5.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>2.5.4</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -95,6 +105,12 @@
                                     <pattern>jet</pattern>
                                     <shadedPattern>
                                         uk.thinkofdeath.minecraft.alex.lib.jet
+                                    </shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.fasterxml</pattern>
+                                    <shadedPattern>
+                                        uk.thinkofdeath.minecraft.alex.lib.fasterxml
                                     </shadedPattern>
                                 </relocation>
                             </relocations>

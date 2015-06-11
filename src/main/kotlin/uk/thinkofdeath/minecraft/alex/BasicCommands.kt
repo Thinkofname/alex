@@ -16,6 +16,7 @@
 
 package uk.thinkofdeath.minecraft.alex
 
+import org.bukkit.ChatColor
 import org.bukkit.GameMode
 import org.bukkit.World
 import org.bukkit.command.CommandSender
@@ -106,6 +107,7 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
         cmd("i ?"),
         cmd("give ?")
     )
+    hasPermission("alex.command.give")
     fun give(sender: Player, mat: MaterialData) {
         give(sender, mat, 64)
     }
@@ -114,6 +116,7 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
         cmd("i ? ?"),
         cmd("give ? ?")
     )
+    hasPermission("alex.command.give")
     fun give(sender: Player, mat : MaterialData, count: Int) {
         sender.getInventory().addItem(
             mat.toItemStack(count)
@@ -121,6 +124,33 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
         sender.sendMessage("Placed `%d` of `%s` in your inventory".format(
             count, blocks[mat]
         ).colorize())
+    }
+
+    cmd("nick")
+    hasPermission("alex.command.nick")
+    fun nick(sender: Player) {
+        sender.sendMessage("Your current nickname is `%s`".format(
+            sender.getDisplayName()
+        ).colorize())
+    }
+
+    cmd("nick ?")
+    hasPermission("alex.command.nick.set")
+    fun nick(sender: Player, nick: String) {
+        val pl = sender.toAlex()
+        val n = ChatColor.translateAlternateColorCodes('&', nick) + ChatColor.RESET
+        pl.setDisplayName(n)
+        sender.sendMessage("Your nickname has been changed to `%s`".format(
+            n
+        ).colorize())
+    }
+
+    cmd("nick clear")
+    hasPermission("alex.command.nick.clear")
+    fun nickClear(sender: Player) {
+        val pl = sender.toAlex()
+        pl.clearDisplayName()
+        sender.sendMessage("Your nickname has been cleared".colorize())
     }
 
 }
