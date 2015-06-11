@@ -26,6 +26,7 @@ fun AlexPlugin.registerTypes(registry: CommandRegistry) {
     registry.addParser(javaClass<GameMode>(), GameModeParser())
     registry.addParser(javaClass<Player>(), PlayerParser(this))
     registry.addParser(javaClass<World>(), WorldParser(this))
+    registry.addParser(javaClass<MCTime>(), TimeParser())
 }
 
 class GameModeParser : ArgumentParser<GameMode> {
@@ -101,5 +102,14 @@ class WorldParser(val plugin: AlexPlugin) : ArgumentParser<World> {
         }
         return completions
     }
+
+}
+
+class TimeParser : ArgumentParser<MCTime> {
+    override fun parse(argument: String): MCTime {
+        return MCTime.fromString(argument)
+    }
+
+    override fun complete(argument: String): Set<String> = hashSetOf()
 
 }

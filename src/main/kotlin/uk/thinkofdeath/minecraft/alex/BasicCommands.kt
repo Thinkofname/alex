@@ -74,7 +74,7 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
         val time = world.getTime()
         sender.sendMessage("The current time in `%s` is `%s`".format(
             world.getName(),
-            formatMinecraftTime(time.toInt())
+            MCTime(time.toInt())
         ).colorize())
     }
 
@@ -86,24 +86,46 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
 
     cmd("time ? ?")
     hasPermission("alex.command.time.set")
-    fun time(sender: CommandSender, world: World, time: Int) {
-        world.setTime(time.toLong())
+    fun time(sender: CommandSender, world: World, time: MCTime) {
+        world.setTime(time.ticks.toLong())
         sender.sendMessage("Time set to `%s` in `%s`".format(
-            formatMinecraftTime(time),
+            time,
             world.getName()
         ).colorize())
     }
 
     cmd("time ?")
     hasPermission("alex.command.time.set")
-    fun time(sender: Player, time: Int) {
+    fun time(sender: Player, time: MCTime) {
         time(sender, sender.getWorld(), time)
     }
 
 }
 
-fun formatMinecraftTime(time: Int) : String{
-    val hours = (6 + (time / 1000)) % 24
-    val mins = (((time % 1000).toDouble() / 1000) * 60).toInt()
-    return "%d:%02d".format(hours, mins)
+data class MCTime(val ticks: Int) {
+    companion object {
+        fun fromString(str: String): MCTime {
+            if (':' !in str) {
+                return MCTime(str.toInt())
+            }
+            val pos = str.indexOf(':')
+            var hours = 24 + (str.substring(0, pos).toInt() - 6) % 24
+            val minStr = str.substring(pos + 1).toLowerCase()
+            val mins = if (minStr.endsWith("am")) {
+                minStr.substring(0, minStr.length() - 2).toInt()
+            } else if (minStr.endsWith("pm")) {
+                hours += 12
+                minStr.substring(0, minStr.length() - 2).toInt()
+            } else {
+                minStr.toInt()
+            }
+            return MCTime(hours * 1000 + ((mins.toDouble() / 60) * 1000).toInt())
+        }
+    }
+
+    override public fun toString(): String {
+        val hours = (6 + (ticks / 1000)) % 24
+        val mins = (((ticks % 1000).toDouble() / 1000) * 60).toInt()
+        return "%d:%02d".format(hours, mins)
+    }
 }
