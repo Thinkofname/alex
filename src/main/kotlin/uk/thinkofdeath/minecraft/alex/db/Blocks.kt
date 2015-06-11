@@ -33,9 +33,6 @@ val blocks = registry<MaterialData> {
             val mat = MaterialData(m, 0)
             strToVal[m.name().toLowerCase().replace("_", "")] = mat
             valToStr[mat] = m.name().toNormalCase()
-            // TODO Remove?
-            // Only here for compat reasons
-            strToVal[m.getId().toString()] = mat
         }
     }
 
