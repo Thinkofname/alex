@@ -30,6 +30,8 @@ import uk.thinkofdeath.minecraft.alex.command.Commands as cmds
 
 class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
 
+    // Gamemode commands
+
     cmds(
         cmd("gm ?"),
         cmd("gamemode ?")
@@ -59,6 +61,54 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
         target.sendMessage("Your gamemode was changed to `%s`".format(
             gm.name().toLowerCase()
         ).colorize())
+    }
+
+    cmd("gms")
+    hasPermission("alex.command.gamemode.self")
+    fun gms(sender: Player) {
+        gamemode(sender, GameMode.SURVIVAL)
+    }
+
+    cmd("gms ?")
+    hasPermission("alex.command.gamemode.other")
+    fun gms(sender: CommandSender, target: Player) {
+        gamemode(sender, GameMode.SURVIVAL, target)
+    }
+
+    cmd("gmc")
+    hasPermission("alex.command.gamemode.self")
+    fun gmc(sender: Player) {
+        gamemode(sender, GameMode.CREATIVE)
+    }
+
+    cmd("gmc ?")
+    hasPermission("alex.command.gamemode.other")
+    fun gmc(sender: CommandSender, target: Player) {
+        gamemode(sender, GameMode.CREATIVE, target)
+    }
+
+    cmd("gma")
+    hasPermission("alex.command.gamemode.self")
+    fun gma(sender: Player) {
+        gamemode(sender, GameMode.ADVENTURE)
+    }
+
+    cmd("gma ?")
+    hasPermission("alex.command.gamemode.other")
+    fun gma(sender: CommandSender, target: Player) {
+        gamemode(sender, GameMode.ADVENTURE, target)
+    }
+
+    cmd("gmsp")
+    hasPermission("alex.command.gamemode.self")
+    fun gmsp(sender: Player) {
+        gamemode(sender, GameMode.SPECTATOR)
+    }
+
+    cmd("gmsp ?")
+    hasPermission("alex.command.gamemode.other")
+    fun gmsp(sender: CommandSender, target: Player) {
+        gamemode(sender, GameMode.SPECTATOR, target)
     }
 
     cmd("worlds")
@@ -117,7 +167,7 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
         cmd("give ? ?")
     )
     hasPermission("alex.command.give")
-    fun give(sender: Player, mat : MaterialData, count: Int) {
+    fun give(sender: Player, mat: MaterialData, count: Int) {
         sender.getInventory().addItem(
             mat.toItemStack(count)
         )

@@ -23,7 +23,7 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
-            <version>0.12.200</version>
+            <version>0.12.412</version>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
@@ -56,7 +56,7 @@
             <plugin>
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <groupId>org.jetbrains.kotlin</groupId>
-                <version>0.12.200</version>
+                <version>0.12.412</version>
 
                 <executions>
                     <execution>

@@ -16,6 +16,7 @@
 
 package uk.thinkofdeath.minecraft.alex.command
 
+import org.bukkit.plugin.java.JavaPlugin
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.util.Arrays
@@ -387,6 +388,27 @@ class CommandRegistry {
         }
         args.remove(args.size() - 1)
         return args
+    }
+
+    // Make sure all the commands are registered
+    fun checkCommands(plugin: JavaPlugin) {
+        for (cmd in root.subCommands.keySet()) {
+            val c = plugin.getCommand(cmd)
+            if (c == null) {
+                throw RuntimeException("Missing commands from plugin.yml \n\n" + generatePluginYaml())
+            }
+        }
+    }
+
+    fun generatePluginYaml(): String {
+        return StringBuilder {
+            append("commands:\n")
+            for (cmd in root.subCommands.keySet().sort()) {
+                append("  ")
+                append(cmd)
+                append(": {}\n")
+            }
+        }.toString()
     }
 }
 

@@ -6,9 +6,13 @@ main: uk.thinkofdeath.minecraft.alex.AlexPlugin
 
 commands:
   gamemode: {}
-  gm: {}
-  worlds: {}
-  time: {}
-  i: {}
   give: {}
+  gm: {}
+  gma: {}
+  gmc: {}
+  gms: {}
+  gmsp: {}
+  i: {}
   nick: {}
+  time: {}
+  worlds: {}

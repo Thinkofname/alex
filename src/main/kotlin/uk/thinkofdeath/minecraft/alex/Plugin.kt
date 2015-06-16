@@ -53,6 +53,8 @@ class AlexPlugin : JavaPlugin {
         for (player in getServer().getOnlinePlayers()) {
             events.on(PlayerJoinEvent(player, ""))
         }
+
+        registry.checkCommands(this)
     }
 
     override fun onDisable() {
