@@ -24,9 +24,10 @@ import org.bukkit.entity.Player
 import org.bukkit.material.MaterialData
 import uk.thinkofdeath.minecraft.alex.command.CommandHandler
 import uk.thinkofdeath.minecraft.alex.db.blocks
-import uk.thinkofdeath.minecraft.alex.HasPermission as hasPermission
-import uk.thinkofdeath.minecraft.alex.command.Command as cmd
-import uk.thinkofdeath.minecraft.alex.command.Commands as cmds
+import uk.thinkofdeath.minecraft.alex.hasPermission
+import uk.thinkofdeath.minecraft.alex.command.cmd
+import uk.thinkofdeath.minecraft.alex.command.cmds
+import uk.thinkofdeath.minecraft.alex.command.doc
 
 class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
 
@@ -37,6 +38,9 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
         cmd("gamemode ?")
     )
     hasPermission("alex.command.gamemode.self")
+    doc("""
+Changes your gamemode to the passed gamemode.
+""")
     fun gamemode(sender: Player, gm: GameMode) {
         sender.setGameMode(gm)
         sender.sendMessage(
@@ -52,6 +56,9 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
         cmd("gamemode ?2 ?1")
     )
     hasPermission("alex.command.gamemode.other")
+    doc("""
+Changes the gamemode of the player to the passed gamemode.
+""")
     fun gamemode(sender: CommandSender, gm: GameMode, target: Player) {
         target.setGameMode(gm)
         sender.sendMessage("Gamemode changed to `%s` for `%s`".format(
@@ -65,54 +72,81 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
 
     cmd("gms")
     hasPermission("alex.command.gamemode.self")
+    doc("""
+Changes your gamemode to survival mode.
+""")
     fun gms(sender: Player) {
         gamemode(sender, GameMode.SURVIVAL)
     }
 
     cmd("gms ?")
     hasPermission("alex.command.gamemode.other")
+    doc("""
+Changes the gamemode of the player to survival mode.
+""")
     fun gms(sender: CommandSender, target: Player) {
         gamemode(sender, GameMode.SURVIVAL, target)
     }
 
     cmd("gmc")
     hasPermission("alex.command.gamemode.self")
+    doc("""
+Changes your gamemode to creative mode.
+""")
     fun gmc(sender: Player) {
         gamemode(sender, GameMode.CREATIVE)
     }
 
     cmd("gmc ?")
     hasPermission("alex.command.gamemode.other")
+    doc("""
+Changes the gamemode of the player to creative mode.
+""")
     fun gmc(sender: CommandSender, target: Player) {
         gamemode(sender, GameMode.CREATIVE, target)
     }
 
     cmd("gma")
     hasPermission("alex.command.gamemode.self")
+    doc("""
+Changes your gamemode to adventure mode.
+""")
     fun gma(sender: Player) {
         gamemode(sender, GameMode.ADVENTURE)
     }
 
     cmd("gma ?")
     hasPermission("alex.command.gamemode.other")
+    doc("""
+Changes the gamemode of the player to adventure mode.
+""")
     fun gma(sender: CommandSender, target: Player) {
         gamemode(sender, GameMode.ADVENTURE, target)
     }
 
     cmd("gmsp")
     hasPermission("alex.command.gamemode.self")
+    doc("""
+Changes your gamemode to spectator mode.
+""")
     fun gmsp(sender: Player) {
         gamemode(sender, GameMode.SPECTATOR)
     }
 
     cmd("gmsp ?")
     hasPermission("alex.command.gamemode.other")
+    doc("""
+Changes the gamemode of the player to spectator mode.
+""")
     fun gmsp(sender: CommandSender, target: Player) {
         gamemode(sender, GameMode.SPECTATOR, target)
     }
 
     cmd("worlds")
     hasPermission("alex.command.world.list")
+    doc("""
+Returns a list of worlds on the server.
+""")
     fun worlds(sender: CommandSender) {
         val worlds = sender.getServer().getWorlds()
         sender.sendMessage("Worlds(%d):".format(worlds.size()).colorize())
@@ -123,6 +157,9 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
 
     cmd("time ?")
     hasPermission("alex.command.time")
+    doc("""
+Returns the current time of the world.
+""")
     fun time(sender: CommandSender, world: World) {
         val time = world.getTime()
         sender.sendMessage("The current time in `%s` is `%s`".format(
@@ -133,12 +170,18 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
 
     cmd("time")
     hasPermission("alex.command.time")
+    doc("""
+Returns the current time of the world you are in.
+""")
     fun time(sender: Player) {
         time(sender, sender.getWorld())
     }
 
     cmd("time ? ?")
     hasPermission("alex.command.time.set")
+    doc("""
+Changes the time of the world.
+""")
     fun time(sender: CommandSender, world: World, time: MCTime) {
         world.setTime(time.ticks.toLong())
         sender.sendMessage("Time set to `%s` in `%s`".format(
@@ -149,6 +192,9 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
 
     cmd("time ?")
     hasPermission("alex.command.time.set")
+    doc("""
+Changes the time of the world you are currently in.
+""")
     fun time(sender: Player, time: MCTime) {
         time(sender, sender.getWorld(), time)
     }
@@ -158,6 +204,9 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
         cmd("give ?")
     )
     hasPermission("alex.command.give")
+    doc("""
+Gives you a 64 stack of the named item.
+""")
     fun give(sender: Player, mat: MaterialData) {
         give(sender, mat, 64)
     }
@@ -167,6 +216,9 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
         cmd("give ? ?")
     )
     hasPermission("alex.command.give")
+    doc("""
+Gives you a stack (with the passed size) of the named item.
+""")
     fun give(sender: Player, mat: MaterialData, count: Int) {
         sender.getInventory().addItem(
             mat.toItemStack(count)
@@ -178,6 +230,9 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
 
     cmd("nick")
     hasPermission("alex.command.nick")
+    doc("""
+Returns your current nickname.
+""")
     fun nick(sender: Player) {
         sender.sendMessage("Your current nickname is `%s`".format(
             sender.getDisplayName()
@@ -186,6 +241,9 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
 
     cmd("nick ?")
     hasPermission("alex.command.nick.set")
+    doc("""
+Changes your current nickname.
+""")
     fun nick(sender: Player, nick: String) {
         val pl = sender.alex
         val n = ChatColor.translateAlternateColorCodes('&', nick) + ChatColor.RESET
@@ -197,6 +255,9 @@ class BasicCommands(val plugin: AlexPlugin) : CommandHandler {
 
     cmd("nick clear")
     hasPermission("alex.command.nick.clear")
+    doc("""
+Removes your set nickname.
+""")
     fun nickClear(sender: Player) {
         val pl = sender.alex
         pl.clearDisplayName()

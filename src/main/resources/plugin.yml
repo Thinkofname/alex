@@ -5,6 +5,7 @@ description: o.o
 main: uk.thinkofdeath.minecraft.alex.AlexPlugin
 
 commands:
+  ahelp: {}
   gamemode: {}
   give: {}
   gm: {}

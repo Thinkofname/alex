@@ -34,7 +34,13 @@ fun String.error(): String {
 fun strColor(str: String, light: ChatColor, dark: ChatColor): String {
     val builder = StringBuilder(light.toString())
     var isFormatting = false
+    var escaped = false
     for (c in str) {
+        if (escaped) {
+            builder.append(c)
+            escaped = false
+            continue
+        }
         when (c) {
             '`' -> if (isFormatting) {
                 isFormatting = false
@@ -57,6 +63,7 @@ fun strColor(str: String, light: ChatColor, dark: ChatColor): String {
                 isFormatting = true
                 builder.append(ChatColor.ITALIC)
             }
+            '\\' -> escaped = true
             else -> builder.append(c)
         }
     }

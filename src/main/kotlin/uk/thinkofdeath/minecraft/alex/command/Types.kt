@@ -21,12 +21,16 @@ import java.lang.reflect.Method
 
 Target(ElementType.METHOD)
 Retention(RetentionPolicy.RUNTIME)
-Repeatable(Commands::class)
-annotation class Command(val value: String)
+Repeatable(cmds::class)
+annotation class cmd(val value: String)
 
 Target(ElementType.METHOD)
 Retention(RetentionPolicy.RUNTIME)
-annotation class Commands(vararg val value: Command)
+annotation class cmds(vararg val value: cmd)
+
+Target(ElementType.METHOD)
+Retention(RetentionPolicy.RUNTIME)
+annotation class doc(val value: String)
 
 interface CommandHandler
 
@@ -37,10 +41,12 @@ data class Node(
 )
 
 data class CMethod(
+    val desc: String,
     val method: Method,
     val owner: CommandHandler,
     val validators: Array<ArgumentValidator<*>>,
-    val positions: IntArray
+    val positions: IntArray,
+    val documentation: String
 )
 
 data class ANode(

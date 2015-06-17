@@ -27,9 +27,9 @@ private val NO_ARG = Any()
 
 class CommandRegistry {
 
-    private val parsers = hashMapOf<Class<*>, ArgumentParser<*>>()
-    private val root = Node()
-    private val splitter = "(?:`(.*?)`)|(?:(.*?)(\\s|$))".toPattern()
+    val parsers = hashMapOf<Class<*>, ArgumentParser<*>>()
+    val root = Node()
+    val splitter = "(?:`(.*?)`)|(?:(.*?)(\\s|$))".toPattern()
 
     init {
         addParser(javaClass<String>(), StringParser())
@@ -42,9 +42,9 @@ class CommandRegistry {
 
     fun register(handler: CommandHandler) {
         for (method in collectAnnotatedMethods(handler.javaClass)) {
-            val single = method.getAnnotation(javaClass<Command>())
+            val single = method.getAnnotation(javaClass<cmd>())
             val commands = if (single == null) {
-                method.getAnnotation(javaClass<Commands>()).value
+                method.getAnnotation(javaClass<cmds>()).value
             } else {
                 arrayOf(single)
             }
@@ -142,11 +142,16 @@ class CommandRegistry {
                     }
                 })
 
+                val docA = method.getAnnotation(javaClass<doc>())
+                val documentation = if (docA == null) "" else docA.value
+
                 currentNode.methods[methodArgs[0]] = CMethod(
+                    command.value,
                     method,
                     handler,
                     argumentValidators,
-                    argPositions
+                    argPositions,
+                    documentation.trim()
                 )
             }
         }
@@ -165,8 +170,8 @@ class CommandRegistry {
         }
 
         outer@for (method in of.getDeclaredMethods()) {
-            if (method.getAnnotation(javaClass<Command>()) == null
-                && method.getAnnotation(javaClass<Commands>()) == null) {
+            if (method.getAnnotation(javaClass<cmd>()) == null
+                && method.getAnnotation(javaClass<cmds>()) == null) {
                 continue
             }
             if (!Modifier.isPrivate(method.getModifiers())) {
@@ -221,7 +226,7 @@ class CommandRegistry {
             if (offset == args.size()) {
                 if (currentNode.methods.size() == 0) {
                     if (lastError == null) {
-                        lastError = IllegalArgumentException("Unknown command")
+                        lastError = CommandException("Unknown command")
                     }
                     continue
                 }
@@ -257,7 +262,7 @@ class CommandRegistry {
                         }
                         return
                     } else {
-                        lastError = IllegalArgumentException("Incorrect caller")
+                        lastError = CommandException("Incorrect caller")
                     }
                 }
                 continue
@@ -304,6 +309,9 @@ class CommandRegistry {
             }
         }
         if (lastError != null) {
+            if (lastError is CommandException) {
+                throw lastError
+            }
             throw CommandException("Failed to execute command", lastError)
         }
         throw CommandException("Unknown command")
@@ -388,6 +396,69 @@ class CommandRegistry {
         }
         args.remove(args.size() - 1)
         return args
+    }
+
+    // Used for help searching
+    fun match(caller: Any, command: String) : List<Node> {
+        val args = split(command)
+        // Stores the states we can return if the current route fails
+        val toTry = Stack<CommandState>()
+        toTry.add(CommandState(root, caller, 0))
+
+        val nodes = arrayListOf<Node>()
+        // Try every possible route until we match a command or
+        // run out of options
+        while (!toTry.isEmpty()) {
+            val state = toTry.pop()
+            val currentNode = state.node
+            var offset = state.offset
+            if (offset == args.size()) {
+                nodes.add(state.node)
+                continue
+            }
+
+            val arg = args[offset]
+            val argLower = arg.toLowerCase()
+
+            for (argumentNode in currentNode.arguments) {
+                var out: Any? = null
+                if (arg != "*") {
+                    try {
+                        val vtype = argumentNode.varargsType
+                        if (vtype != null) {
+                            out = JArray.newInstance(
+                                vtype, args.size() - offset
+                            )
+                            for (i in offset..args.size() - 1) {
+                                val parsed = argumentNode.parser.parse(args[i])
+                                for (type in argumentNode.type) {
+                                    (type as ArgumentValidator<Any>).validate(args[i], parsed!!)
+                                }
+                                JArray.set(out, i - offset, parsed)
+                            }
+                            offset = args.size() - 1
+                        } else {
+                            out = argumentNode.parser.parse(arg)
+                            for (type in argumentNode.type) {
+                                (type as ArgumentValidator<Any>).validate(arg, out!!)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        continue
+                    }
+                }
+
+                val newState = CommandState(argumentNode.node, out ?: NO_ARG, offset + 1, state)
+                toTry.add(newState)
+            }
+            // Check sub-commands
+            if (argLower in currentNode.subCommands) {
+                val next = currentNode.subCommands[argLower]!!
+                val newState = CommandState(next, NO_ARG, offset + 1, state)
+                toTry.add(newState)
+            }
+        }
+        return nodes
     }
 
     // Make sure all the commands are registered

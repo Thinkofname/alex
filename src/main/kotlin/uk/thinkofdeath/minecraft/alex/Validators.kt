@@ -28,14 +28,14 @@ import java.lang.annotation.Target
 Target(ElementType.PARAMETER, ElementType.METHOD)
 Retention(RetentionPolicy.RUNTIME)
 TypeHandler(value = javaClass<HasPermissionHandler>(), clazz = javaClass<CommandSender>())
-annotation class HasPermission(vararg val value: String, val wildcard: Boolean = true)
+annotation class hasPermission(vararg val value: String, val wildcard: Boolean = true)
 
 class HasPermissionHandler : ArgumentValidator<CommandSender> {
 
     val permissions: Array<out String>
     val wildcard: Boolean
 
-    constructor(hasPermission: HasPermission) {
+    constructor(hasPermission: hasPermission) {
         permissions = hasPermission.value
         wildcard = hasPermission.wildcard
     }

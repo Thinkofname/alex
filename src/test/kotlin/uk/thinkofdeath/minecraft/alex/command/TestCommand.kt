@@ -19,7 +19,7 @@ package uk.thinkofdeath.minecraft.alex.command
 import kotlin.test.assertEquals
 import kotlin.test.fail
 import org.junit.Test as test
-import uk.thinkofdeath.minecraft.alex.command.Command as command
+import uk.thinkofdeath.minecraft.alex.command.cmd as command
 
 class CommandTest {
     test fun registerBasic() {
@@ -239,7 +239,7 @@ class CommandTest {
         val reg = CommandRegistry()
         var callCount = 0
         reg.register(object : CommandHandler {
-            Commands(
+            cmds(
                     command("a"),
                     command("b")
             )
@@ -256,7 +256,7 @@ class CommandTest {
         val reg = CommandRegistry()
         var callCount = 0
         reg.register(object : CommandHandler {
-            Commands(
+            cmds(
                     command("a ?"),
                     command("b ?")
             )

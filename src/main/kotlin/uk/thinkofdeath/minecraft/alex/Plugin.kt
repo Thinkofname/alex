@@ -27,6 +27,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.plugin.java.JavaPluginLoader
 import uk.thinkofdeath.minecraft.alex.command.CommandException
 import uk.thinkofdeath.minecraft.alex.command.CommandRegistry
+import uk.thinkofdeath.minecraft.alex.command.docs.DocCommands
 import java.io.File
 import java.util.*
 
@@ -39,6 +40,7 @@ class AlexPlugin : JavaPlugin {
     val playersUUID = hashMapOf<UUID, APlayer>()
     val playersName = hashMapOf<String, APlayer>()
     val events = Events(this)
+    val doc = DocCommands(this)
 
     constructor() : super()
 
@@ -49,6 +51,7 @@ class AlexPlugin : JavaPlugin {
     override fun onEnable() {
         registerTypes(registry)
         registry.register(BasicCommands(this))
+        registry.register(doc)
         getServer().getPluginManager().registerEvents(events, this)
         for (player in getServer().getOnlinePlayers()) {
             events.on(PlayerJoinEvent(player, ""))
@@ -71,9 +74,15 @@ class AlexPlugin : JavaPlugin {
         try {
             registry.execute(sender, cmd.toString())
         } catch (e: CommandException) {
+            if (e.getMessage() == "Unknown command") {
+                val str = cmd.toString()
+                doc.help(sender, *str.splitBy(" ").toTypedArray())
+                return true
+            }
             sender.sendMessage(("Error: `" + e.getMessage() + "`").error())
             if (e.getCause() != null) {
-                sender.sendMessage(e.getCause()?.getMessage()?.error())
+                sender.sendMessage(e.getCause()?.toString()?.error())
+                e.printStackTrace()
             }
         }
         return true
