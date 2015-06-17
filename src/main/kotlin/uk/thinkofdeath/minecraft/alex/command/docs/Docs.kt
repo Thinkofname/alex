@@ -47,6 +47,8 @@ Incomplete commands will show all possible matches.
     cmd("ahelp ?:search")
     hasPermission("alex.command.help")
     doc("""
+Searches for documentation for passed search query.
+Use `\/ahelp` for more information.
     """)
     fun help(sender: CommandSender, vararg search: String) {
         var s = search.joinToString(" ")
