@@ -44,7 +44,7 @@ Incomplete commands will show all possible matches.
 """.trim().colorize())
     }
 
-    cmd("ahelp ?")
+    cmd("ahelp ?:search")
     hasPermission("alex.command.help")
     doc("""
     """)
@@ -140,16 +140,21 @@ Alex commands documentation
             val arg = args[i]
             // Dynamic argument
             if (arg.startsWith("?")) {
-                val index = if (arg == "?") {
+                val pos = if (':' in arg) arg.indexOf(':') else arg.length()
+                val index = if (arg == "?" || pos == 1) {
                     argIndex
                 } else {
-                    val id = arg.substring(1).toInt()
+                    val id = arg.substring(1, pos).toInt()
                     id
                 }
 
-                buf.append("`")
-                buf.append(params[index].getSimpleName())
-                buf.append("` ")
+                val name = if (':' in arg)
+                    arg.substring(pos+1)
+                else params[index].getSimpleName().toLowerCase()
+
+                buf.append("`<")
+                buf.append(name)
+                buf.append(">` ")
 
                 argIndex++
             } else {

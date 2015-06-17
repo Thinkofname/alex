@@ -177,7 +177,7 @@ Returns the current time of the world you are in.
         time(sender, sender.getWorld())
     }
 
-    cmd("time ? ?")
+    cmd("time ? ?:time")
     hasPermission("alex.command.time.set")
     doc("""
 Changes the time of the world.
@@ -190,7 +190,7 @@ Changes the time of the world.
         ).colorize())
     }
 
-    cmd("time ?")
+    cmd("time ?:time")
     hasPermission("alex.command.time.set")
     doc("""
 Changes the time of the world you are currently in.
@@ -200,8 +200,8 @@ Changes the time of the world you are currently in.
     }
 
     cmds(
-        cmd("i ?"),
-        cmd("give ?")
+        cmd("i ?:item"),
+        cmd("give ?:item")
     )
     hasPermission("alex.command.give")
     doc("""
@@ -212,8 +212,8 @@ Gives you a 64 stack of the named item.
     }
 
     cmds(
-        cmd("i ? ?"),
-        cmd("give ? ?")
+        cmd("i ?:item ?:count"),
+        cmd("give ?:item ?:count")
     )
     hasPermission("alex.command.give")
     doc("""
@@ -239,7 +239,7 @@ Returns your current nickname.
         ).colorize())
     }
 
-    cmd("nick ?")
+    cmd("nick ?:nickname")
     hasPermission("alex.command.nick.set")
     doc("""
 Changes your current nickname.

@@ -72,10 +72,11 @@ class CommandRegistry {
                     val arg = args[i]
                     // Dynamic argument
                     if (arg.startsWith("?")) {
-                        val index = if (arg == "?") {
+                        val pos = if (':' in arg) arg.indexOf(':') else arg.length()
+                        val index = if (arg == "?" || pos == 1) {
                             argIndex
                         } else {
-                            val id = arg.substring(1).toInt()
+                            val id = arg.substring(1, pos).toInt()
                             if (id >= methodArgs.size() || id < 1) {
                                 throw RuntimeException("Invalid explicit argument position")
                             }
